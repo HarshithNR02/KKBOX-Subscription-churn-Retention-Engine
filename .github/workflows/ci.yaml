@@ -1,0 +1,75 @@
+name: KKBOX Churn CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r app/requirements.txt
+
+      - name: Validate feature columns
+        run: |
+          python3 -c "
+          import sys
+          sys.path.insert(0, 'app')
+          from utils import FEATURE_COLS
+          assert len(FEATURE_COLS) == 101, f'Expected 101 features, got {len(FEATURE_COLS)}'
+          print(f'Feature count check passed: {len(FEATURE_COLS)} features')
+          "
+
+      - name: Validate imports
+        run: |
+          python3 -c "
+          import sys
+          sys.path.insert(0, 'app')
+          from utils import (
+              load_model, load_isotonic, load_master,
+              get_risk_tier, get_retention_action,
+              get_ai_insights, FEATURE_COLS
+          )
+          print('All imports passed')
+          "
+
+      - name: Validate page syntax
+        run: |
+          python3 -m py_compile app/Home.py
+          python3 -m py_compile app/utils.py
+          python3 -m py_compile app/pages/1_Churn_Prediction.py
+          python3 -m py_compile app/pages/2_Customer_Segments.py
+          python3 -m py_compile app/pages/3_WhatIF_Analysis.py
+          python3 -m py_compile app/pages/4_SHAP_Explainability.py
+          python3 -m py_compile app/pages/5_Retention_Strategy.py
+          echo "All pages syntax validated"
+
+      - name: Validate requirements
+        run: |
+          python3 -c "
+          required = [
+              'streamlit', 'pandas', 'numpy', 'lightgbm',
+              'scikit-learn', 'matplotlib', 'shap', 'joblib',
+              'openai', 'python-dotenv', 'pyarrow',
+              'azure-storage-blob'
+          ]
+          with open('app/requirements.txt') as f:
+              content = f.read().lower()
+          for pkg in required:
+              assert pkg.lower() in content, f'Missing package: {pkg}'
+          print('Requirements check passed')
+          "

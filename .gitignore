@@ -1,0 +1,36 @@
+# Data
+data/
+*.parquet
+*.csv
+
+# Models — go to Azure Blob
+models/*.pkl
+
+# Keep plots in models
+!models/*.png
+
+# MLflow
+mlflow/
+
+# CatBoost logs
+notebooks/catboost_info/
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*.egg-info/
+
+# Environment
+.env
+app/.env
+
+# VS Code
+.vscode/
+
+# Mac
+.DS_Store
+
+# Outputs
+outputs/
+features/

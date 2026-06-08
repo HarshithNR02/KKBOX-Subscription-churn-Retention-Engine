@@ -106,7 +106,7 @@ with col3:
     st.pyplot(fig)
 
 with col4:
-    st.subheader("⚠️ Revenue at Risk by Segment")
+    st.subheader("Revenue at Risk by Segment")
     master['expected_loss'] = master['clv'] * master['churn_prob']
     risk_by_seg = master.groupby('segment')['expected_loss'].sum().sort_values(ascending=False)
     colors = [COLORS.get(s, '#95a5a6') for s in risk_by_seg.index]

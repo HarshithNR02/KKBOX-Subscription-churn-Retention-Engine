@@ -8,8 +8,8 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 from utils import load_model, load_isotonic, load_master, get_risk_tier, get_retention_action, get_ai_insights, FEATURE_COLS
 
-st.set_page_config(page_title="Churn Prediction", page_icon="🔮", layout="wide")
-st.title("🔮 Churn Prediction Engine")
+st.set_page_config(page_title="Churn Prediction", layout="wide")
+st.title("Churn Prediction Engine")
 st.markdown("Production-style scoring — look up any user by ID and get instant churn analysis.")
 st.divider()
 
@@ -197,12 +197,12 @@ if user_id and user_id.strip():
 
         if drivers:
             for d in drivers:
-                st.write(f"⚠️ {d}")
+                st.write(f"{d}")
         else:
             st.write("✅ No major risk signals detected")
 
         st.divider()
-        st.subheader("🤖 AI Retention Analyst")
+        st.subheader("AI Retention Analyst")
         if st.button("Generate AI Insights", type="primary"):
             with st.spinner("Analyzing user profile..."):
                 user_features_dict = {

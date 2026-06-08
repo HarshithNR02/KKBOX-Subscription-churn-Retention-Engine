@@ -46,7 +46,7 @@ with col_right:
 
 st.divider()
 
-if st.button("🔮 Predict Churn", type="primary", use_container_width=True):
+if st.button("Predict Churn", type="primary", use_container_width=True):
     input_data = {col: 0 for col in FEATURE_COLS}
     input_data.update({
         'days_since_last_transaction': days_since_last_transaction,
@@ -153,12 +153,12 @@ if 'whatif_result' in st.session_state:
     st.subheader("🔑 Key Risk Drivers")
     if res['drivers']:
         for d in res['drivers']:
-            st.write(f"⚠️ {d}")
+            st.write(f"{d}")
     else:
         st.write("✅ No major risk signals detected")
 
     st.divider()
-    st.subheader("🤖 AI Retention Analyst")
+    st.subheader("AI Retention Analyst")
     if st.button("Generate AI Insights", type="secondary"):
         with st.spinner("Generating AI insights..."):
             ai_response = get_ai_insights(

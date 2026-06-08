@@ -9,8 +9,8 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 from utils import load_master, load_shap_values, load_model
 
-st.set_page_config(page_title="SHAP Explainability", page_icon="🧠", layout="wide")
-st.title("🧠 Model Explainability")
+st.set_page_config(page_title="SHAP Explainability", layout="wide")
+st.title("Model Explainability")
 st.markdown("SHAP (SHapley Additive exPlanations) — understanding why the model predicts churn.")
 st.divider()
 
@@ -57,7 +57,7 @@ with col2:
 st.divider()
 
 # --- Waterfall Plots ---
-st.subheader("🌊 Individual Prediction Explanations")
+st.subheader("Individual Prediction Explanations")
 st.markdown("Waterfall plots show exactly why the model predicted churn for specific users.")
 
 tab1, tab2 = st.tabs(["🔴 High Risk User", "🟢 Low Risk User"])
@@ -89,7 +89,7 @@ with tab2:
 st.divider()
 
 # --- SHAP Summary Plot ---
-st.subheader("📊 SHAP Summary Plot")
+st.subheader("SHAP Summary Plot")
 st.markdown("Each dot is a user. Red = high feature value, Blue = low feature value. Position shows impact on churn prediction.")
 if (MODEL_DIR / "shap_summary.png").exists():
     st.image(str(MODEL_DIR / "shap_summary.png"), use_container_width=True)
@@ -97,7 +97,7 @@ if (MODEL_DIR / "shap_summary.png").exists():
 st.divider()
 
 # --- Feature Distribution by Churn ---
-st.subheader("📈 Feature Distribution Analysis")
+st.subheader("Feature Distribution Analysis")
 master = load_master()
 
 selected_feature = st.selectbox(

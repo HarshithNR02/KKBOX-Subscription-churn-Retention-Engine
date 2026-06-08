@@ -39,7 +39,7 @@ st.divider()
 col_left, col_right = st.columns(2)
 
 with col_left:
-    st.subheader("📊 Churn Rate by Segment")
+    st.subheader("Churn Rate by Segment")
     seg_stats = master.groupby('segment').agg(
         Users=('msno', 'count'),
         Churn_Rate=('is_churn', 'mean'),

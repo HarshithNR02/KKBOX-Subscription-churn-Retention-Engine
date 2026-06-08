@@ -83,7 +83,7 @@ st.pyplot(fig)
 st.divider()
 
 # --- Strategy per Segment ---
-st.subheader("📋 Retention Strategy by Segment")
+st.subheader("Retention Strategy by Segment")
 
 strategies = {
     'Lost': {
@@ -182,7 +182,7 @@ with col_b:
 st.divider()
 
 # --- AI Strategy Advisor ---
-st.subheader("🤖 AI Strategy Advisor")
+st.subheader("AI Strategy Advisor")
 st.markdown("Get GPT-4o powered retention strategy recommendations.")
 
 if st.button("Generate AI Strategy", type="primary"):

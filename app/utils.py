@@ -51,7 +51,7 @@ def get_retention_action(segment, risk_tier):
         'Returning':      "🎵 Engagement campaign — personalized playlist recommendations.",
         'Short_Cycle':    "✅ No action needed — auto-renewing, highest CLV segment.",
     }
-    return actions.get(segment, "📊 Monitor closely.")
+    return actions.get(segment, "Monitor closely.")
 
 FEATURE_COLS = [
     'current_auto_renew', 'current_is_cancel', 'current_plan_days',

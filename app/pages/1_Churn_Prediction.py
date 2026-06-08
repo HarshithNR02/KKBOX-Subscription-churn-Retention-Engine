@@ -187,7 +187,7 @@ if user_id and user_id.strip():
         if user_row.get('current_auto_renew') == 0:
             drivers.append("Auto-renew is OFF")
         if user_row.get('last_churn') == 1:
-            drivers.append("Churned last month — 91.6% re-churn rate")
+            drivers.append("Churned last month — 67.7% re-churn rate")
         if user_row.get('stopped_listening') == 1:
             drivers.append("Stopped listening in March")
         if user_row.get('days_to_expiry', 30) < 7:

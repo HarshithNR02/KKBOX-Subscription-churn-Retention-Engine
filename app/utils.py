@@ -29,7 +29,7 @@ def ensure_files_downloaded():
 
     conn_str = os.getenv("AZURE_CONNECTION_STRING", "")
     client = BlobServiceClient.from_connection_string(conn_str)
-    container = client.get_container_client("kkbox-churn")
+    container = client.get_container_client("kkboxchurn")
 
     files_needed = {
         "models/lgbm_churn_final.pkl":          str(MODEL_DIR / "lgbm_churn_final.pkl"),

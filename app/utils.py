@@ -4,14 +4,57 @@ import numpy as np
 import joblib
 from pathlib import Path
 import streamlit as st
-import os
-import requests
 from dotenv import load_dotenv
+import os
+
+# Load .env file
 load_dotenv(Path(__file__).parent / ".env")
 
-DATA_DIR = Path.home() / "kkbox-churn" / "data" / "parquet"
-MODEL_DIR = Path.home() / "kkbox-churn" / "models"
+# --- Environment detection ---
+IS_HF = bool(os.getenv("AZURE_CONNECTION_STRING", ""))
 
+if IS_HF:
+    DATA_DIR = Path("/tmp/data")
+    MODEL_DIR = Path("/tmp/models")
+else:
+    DATA_DIR = Path.home() / "kkbox-churn" / "data" / "parquet"
+    MODEL_DIR = Path.home() / "kkbox-churn" / "models"
+
+# --- Download from Azure Blob at startup ---
+def ensure_files_downloaded():
+    if not IS_HF:
+        return  # running locally, files already exist
+
+    from azure.storage.blob import BlobServiceClient
+
+    conn_str = os.getenv("AZURE_CONNECTION_STRING", "")
+    client = BlobServiceClient.from_connection_string(conn_str)
+    container = client.get_container_client("kkbox-churn")
+
+    files_needed = {
+        "models/lgbm_churn_final.pkl":          str(MODEL_DIR / "lgbm_churn_final.pkl"),
+        "models/isotonic_calibrator.pkl":        str(MODEL_DIR / "isotonic_calibrator.pkl"),
+        "models/kmeans_k5.pkl":                  str(MODEL_DIR / "kmeans_k5.pkl"),
+        "models/cluster_scaler.pkl":             str(MODEL_DIR / "cluster_scaler.pkl"),
+        "models/shap_summary.png":               str(MODEL_DIR / "shap_summary.png"),
+        "models/shap_waterfall_highrisk.png":    str(MODEL_DIR / "shap_waterfall_highrisk.png"),
+        "models/shap_waterfall_lowrisk.png":     str(MODEL_DIR / "shap_waterfall_lowrisk.png"),
+        "data/master_dataset.parquet":           str(DATA_DIR / "master_dataset.parquet"),
+        "data/shap_values.parquet":              str(DATA_DIR / "shap_values.parquet"),
+        "data/user_segments.parquet":            str(DATA_DIR / "user_segments.parquet"),
+    }
+
+    for blob_name, local_path in files_needed.items():
+        if not Path(local_path).exists():
+            Path(local_path).parent.mkdir(parents=True, exist_ok=True)
+            blob_client = container.get_blob_client(blob_name)
+            with open(local_path, "wb") as f:
+                f.write(blob_client.download_blob().readall())
+
+# Run at import time — downloads files if on HF
+ensure_files_downloaded()
+
+# --- Model and data loaders ---
 @st.cache_resource
 def load_model():
     return joblib.load(MODEL_DIR / "lgbm_churn_final.pkl")
@@ -22,8 +65,7 @@ def load_isotonic():
 
 @st.cache_data
 def load_master():
-    master = pd.read_parquet(DATA_DIR / "master_dataset.parquet")
-    return master
+    return pd.read_parquet(DATA_DIR / "master_dataset.parquet")
 
 @st.cache_data
 def load_segments():
@@ -45,13 +87,51 @@ def get_risk_tier(prob):
 
 def get_retention_action(segment, risk_tier):
     actions = {
-        'Lost':           "❌ Write off — CAC exceeds CLV. No action recommended.",
-        'Mid_Value':      "💰 Send targeted discount — 1 month free or price lock offer.",
-        'High_Engage':    "⬆️ Premium upsell — offer hi-fi audio or offline downloads.",
-        'Returning':      "🎵 Engagement campaign — personalized playlist recommendations.",
-        'Short_Cycle':    "✅ No action needed — auto-renewing, highest CLV segment.",
+        'Lost':         "❌ Write off — CAC exceeds CLV. No action recommended.",
+        'Mid_Value':    "💰 Send targeted discount — 1 month free or price lock offer.",
+        'High_Engage':  "⬆️ Premium upsell — offer hi-fi audio or offline downloads.",
+        'Returning':    "🎵 Engagement campaign — personalized playlist recommendations.",
+        'Short_Cycle':  "✅ No action needed — auto-renewing, highest CLV segment.",
     }
-    return actions.get(segment, "Monitor closely.")
+    return actions.get(segment, "📊 Monitor closely.")
+
+def get_ai_insights(churn_prob, segment, risk_drivers, clv, user_features):
+    api_key = os.getenv("OPENAI_API_KEY", "")
+    if not api_key:
+        return "⚠️ Add OPENAI_API_KEY to .env to enable AI insights."
+
+    try:
+        import openai
+        client = openai.OpenAI(api_key=api_key)
+
+        prompt = f"""You are a senior customer retention analyst at a music streaming service like Spotify.
+
+A customer has been flagged by our churn prediction model:
+- Churn Probability: {churn_prob:.1%}
+- Customer Segment: {segment}
+- Estimated CLV: {clv:,.0f} TWD
+- Risk Drivers: {', '.join(risk_drivers) if risk_drivers else 'None identified'}
+- Days Since Last Transaction: {user_features['days_since_last_transaction']}
+- Days Since Last Listen: {user_features['days_since_last_listen']}
+- Auto Renew: {'ON' if user_features['current_auto_renew'] == 1 else 'OFF'}
+- Tenure: {user_features['customer_tenure_days']} days
+- Churned Last Month: {'Yes' if user_features['last_churn'] == 1 else 'No'}
+
+Write a concise 3-paragraph retention analysis:
+1. Why this customer is at risk based on behavioral signals
+2. Specific retention action with business justification
+3. ROI of intervention vs cost of losing this customer
+
+Be specific, data-driven, actionable. Under 200 words."""
+
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=400
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"AI insights unavailable: {str(e)}"
 
 FEATURE_COLS = [
     'current_auto_renew', 'current_is_cancel', 'current_plan_days',
@@ -85,42 +165,3 @@ FEATURE_COLS = [
     'listening_per_dollar', 'is_extreme_risk', 'is_silent_loyal',
     'auto_off_inactive', 'listen_to_plan_ratio', 'active_days_per_sub_day'
 ]
-
-def get_ai_insights(churn_prob, segment, risk_drivers, clv, user_features):
-    api_key = os.getenv("OPENAI_API_KEY", "")
-    if not api_key:
-        return "⚠️ Add OPENAI_API_KEY to .env to enable AI insights."
-
-    try:
-        import openai
-        client = openai.OpenAI(api_key=api_key)
-
-        prompt = f"""You are a senior customer retention analyst at a music streaming service like Spotify.
-
-A customer has been flagged by our churn prediction model:
-- Churn Probability: {churn_prob:.1%}
-- Customer Segment: {segment}
-- Estimated CLV: {clv:,.0f} TWD
-- Risk Drivers: {', '.join(risk_drivers) if risk_drivers else 'None identified'}
-- Days Since Last Transaction: {user_features['days_since_last_transaction']}
-- Days Since Last Listen: {user_features['days_since_last_listen']}
-- Auto Renew: {'ON' if user_features['current_auto_renew'] == 1 else 'OFF'}
-- Tenure: {user_features['customer_tenure_days']} days
-- Churned Last Month: {'Yes' if user_features['last_churn'] == 1 else 'No'}
-
-Write a concise 3-paragraph retention analysis:
-1. Why this customer is at risk based on behavioral signals
-2. Specific retention action with business justification
-3. ROI of intervention vs cost of losing this customer
-
-Be specific, data-driven, actionable. Under 200 words."""
-
-        client = openai.OpenAI(api_key=api_key)
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=400
-        )
-        return response.choices[0].message.content
-    except Exception as e:
-        return f"AI insights unavailable: {str(e)}"

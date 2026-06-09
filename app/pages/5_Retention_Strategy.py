@@ -12,7 +12,7 @@ from utils import load_master, get_ai_insights
 
 st.set_page_config(page_title="Retention Strategy", page_icon="💡", layout="wide")
 st.title("💡 Retention Strategy")
-st.markdown("Data-driven retention recommendations — who to target, what to offer, and expected ROI.")
+st.markdown("Data-driven retention recommendations who to target, what to offer, and expected ROI.")
 st.divider()
 
 master = load_master()
@@ -25,13 +25,14 @@ m1, m2, m3, m4 = st.columns(4)
 with m1:
     st.metric("Total Users", f"{len(master):,}")
 with m2:
+    master['expected_loss'] = master['clv'] * master['churn_prob']
     total_risk = master['expected_loss'].sum()
-    st.metric("Est. Revenue at Risk (CLV-weighted)", f"~{total_risk/1e9:.2f}B TWD")
+    st.metric("Est. Revenue at Risk (CLV-weighted)", f"~{total_risk/1e6:.0f}M TWD")
 with m3:
     high_risk = master[master['churn_prob'] > 0.5]
     st.metric("Critical Risk Users", f"{len(high_risk):,}")
 with m4:
-    actionable = master[(master['churn_prob'] > 0.05) & (master['clv'] > 10000)]
+    actionable = master[(master['churn_prob'] > 0.05) & (master['clv'] > 1000)]
     st.metric("Actionable Users", f"{len(actionable):,}")
 
 st.divider()
@@ -114,7 +115,7 @@ strategies = {
         'action': 'Premium Upsell',
         'offer': 'Hi-fi audio quality or offline downloads feature',
         'budget': '~50 TWD per user',
-        'reason': 'Heavy listeners (506K secs/month). Low churn risk but high engagement = upsell opportunity.'
+        'reason': 'Heavy listeners with above-average engagement time. Low churn risk but high engagement = upsell opportunity.'
     },
     'Returning': {
         'icon': '🔵',
@@ -124,7 +125,7 @@ strategies = {
         'action': 'Engagement Campaign',
         'offer': 'Personalized playlist + social features access',
         'budget': '~30 TWD per user',
-        'reason': 'Re-engaged users with listening spike (trend ratio 234x). Nurture before they drift again.'
+        'reason': 'Re-engaged users with significant listening spike. Nurture before they drift again.'
     },
     'Short_Cycle': {
         'icon': '🟣',

@@ -12,7 +12,7 @@ from utils import load_master
 
 st.set_page_config(page_title="Customer Segments", page_icon="👥", layout="wide")
 st.title("👥 Customer Segmentation")
-st.markdown("RFM-based K-Means clustering — 5 behavioral segments identified from 970K users.")
+st.markdown("RFM-based K-Means clustering 5 behavioral segments identified from 970K users.")
 st.divider()
 
 master = load_master()
@@ -36,7 +36,7 @@ seg_stats = master.groupby('segment').agg(
     Median_CLV=('clv', 'median'),
     Avg_Tenure=('customer_tenure_days', 'mean'),
     Avg_Monthly_Revenue=('monthly_revenue', 'mean'),
-    Revenue_At_Risk=('clv', lambda x: (x * master.loc[x.index, 'churn_prob']).mean())
+    Revenue_At_Risk=('clv', lambda x: (x * master.loc[x.index, 'churn_prob']).sum())
 ).round(2).sort_values('Churn_Rate', ascending=False)
 
 seg_stats['Churn_Rate'] = seg_stats['Churn_Rate'].apply(lambda x: f"{x:.1%}")
@@ -44,6 +44,7 @@ seg_stats['Avg_CLV'] = seg_stats['Avg_CLV'].apply(lambda x: f"{x:,.0f} TWD")
 seg_stats['Median_CLV'] = seg_stats['Median_CLV'].apply(lambda x: f"{x:,.0f} TWD")
 seg_stats['Avg_Tenure'] = seg_stats['Avg_Tenure'].apply(lambda x: f"{x:.0f} days")
 seg_stats['Avg_Monthly_Revenue'] = seg_stats['Avg_Monthly_Revenue'].apply(lambda x: f"{x:.0f} TWD")
+seg_stats['Revenue_At_Risk'] = seg_stats['Revenue_At_Risk'].apply(lambda x: f"{x/1e6:.0f}M TWD")
 
 st.dataframe(seg_stats, use_container_width=True)
 
@@ -106,7 +107,7 @@ with col3:
     st.pyplot(fig)
 
 with col4:
-    st.subheader("Revenue at Risk by Segment")
+    st.subheader("⚠️ Revenue at Risk by Segment")
     master['expected_loss'] = master['clv'] * master['churn_prob']
     risk_by_seg = master.groupby('segment')['expected_loss'].sum().sort_values(ascending=False)
     colors = [COLORS.get(s, '#95a5a6') for s in risk_by_seg.index]
@@ -143,9 +144,9 @@ with d5:
 
 # Segment description
 descriptions = {
-    'Lost': "🔴 **Lost** — 82% churn probability. Long-promo plan users who paid upfront and disappeared. No retention action recommended — CAC exceeds CLV.",
+    'Lost': "🔴 **Lost** — 82% churn probability. Long-promo plan users who paid upfront and disappeared. No retention action recommended CAC exceeds CLV.",
     'Mid_Value': "🟡 **Mid_Value** — Moderate engagement, 6.2% actual churn. Largest revenue segment. Targeted discount offers recommended.",
-    'High_Engage': "🟢 **High_Engage** — Heavy listeners (5x average listening time). Low churn risk. Premium upsell opportunity.",
+    'High_Engage': "🟢 **High_Engage** — Heavy listeners with above-average engagement time. Low churn risk. Premium upsell opportunity.",
     'Returning': "🔵 **Returning** — Re-engaged users with listening spike. Nurture with personalized recommendations.",
     'Short_Cycle': "🟣 **Short_Cycle** — Expiring soon but auto-renewing. Highest CLV, lowest risk. No intervention needed."
 }

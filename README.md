@@ -23,14 +23,12 @@
 | Features engineered | **101** |
 | Training users | 800,236 (April 2017 cohort) |
 | Validation users | 79,942 (May 2017 cohort) |
-| Total revenue at risk | **7.9 Billion TWD** |
+| Estimated revenue at risk (CLV-weighted) | **~100M TWD** |
 
-<<<<<<< HEAD
-## [MLflow Experiments](docs/mlflow_experiments.png)
+---
 
-=======
-![MLflow Experiments](docs/mlflow_experiments.PNG)
->>>>>>> 461019739d7f43c80ebb6a74c53da404a2fa74c0
+![Dashboard](docs/dashboard_home.png)
+
 ---
 
 ## 📊 Dataset
@@ -88,6 +86,10 @@ Streamlit dashboard (Azure Blob + Hugging Face Spaces)
 | `13_segment_models` | Segment-specific model experiments |
 | `14_clv` | Customer Lifetime Value estimation |
 | `15_mlflow` | Experiment tracking — 9 runs logged |
+
+---
+
+![MLflow Experiments](docs/mlflow_experiments.PNG)
 
 ---
 

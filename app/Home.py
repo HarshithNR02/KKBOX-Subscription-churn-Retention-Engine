@@ -31,7 +31,7 @@ with col3:
 with col4:
     st.metric("Features Engineered", "101")
 with col5:
-    st.metric("Est. Revenue at Risk", "~7.9B TWD")
+    st.metric("Est. Revenue at Risk", "~100M TWD")
 
 st.divider()
 
@@ -50,7 +50,7 @@ with col_left:
     st.dataframe(seg_stats, use_container_width=True)
 
 with col_right:
-    st.subheader("🔑 Top Churn Signals (SHAP)")
+    st.subheader("Top Churn Signals (SHAP)")
     signals = {
         'days_since_last_transaction': 3.85,
         'days_to_expiry': 1.02,
@@ -73,13 +73,13 @@ with col_right:
 st.divider()
 
 # --- Project Summary ---
-st.subheader("🏗️ Project Architecture")
+st.subheader("Project Architecture")
 col1, col2, col3, col4 = st.columns(4)
 with col1:
-    st.info("**Data Engineering**\n\n250M row logs processed with DuckDB out-of-core. 3 tables joined. 101 features engineered.")
+    st.info("**Data Engineering**\n\n392M row logs processed with DuckDB out-of-core. 3 tables joined. 101 features engineered.")
 with col2:
-    st.info("**Modeling**\n\nLightGBM with Optuna tuning (50 trials). Temporal train/val split. AUC 0.9481 — top 4-5% competition equivalent.")
+    st.info("**Modeling**\n\nLightGBM with Optuna tuning (50 trials). Temporal train/val split. AUC 0.9481.")
 with col3:
     st.info("**Segmentation**\n\nK-Means RFM clustering. 5 segments: Lost, Mid_Value, High_Engage, Returning, Short_Cycle.")
 with col4:
-    st.info("**Business Impact**\n\n7.9B TWD revenue at risk identified. Retention priority matrix built per segment.")
+    st.info("**Business Impact**\n\n7.9B TWD estimated CLV-weighted revenue at risk. Retention priority matrix built per segment.")

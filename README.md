@@ -27,6 +27,7 @@
 | Validation users | 79,942 (May 2017 cohort) |
 | Total revenue at risk | **7.9 Billion TWD** |
 
+![MLflow Experiments](docs/mlflow_experiments.png)
 ---
 
 ## 📊 Dataset
@@ -96,6 +97,8 @@ Streamlit dashboard (Azure Blob + Hugging Face Spaces)
 | `avg_amount_paid` | 0.57 | Higher payers are more loyal |
 | `auto_not_cancel_ratio` | 0.36 | Users who always auto-renew and never cancel = lowest risk |
 | `customer_tenure_days` | 0.31 | Longer tenure correlates with lower churn probability |
+
+![SHAP Summary](models/shap_summary.png)
 
 ---
 

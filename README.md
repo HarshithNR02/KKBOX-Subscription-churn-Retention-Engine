@@ -20,14 +20,13 @@
 | Metric | Value |
 |--------|-------|
 | **ROC-AUC** | **0.9481** (temporal hold-out, May 2017 cohort) |
-| PR-AUC | 0.4287 |
-| Optimal F1 | 0.4759 |
 | Features engineered | **101** |
 | Training users | 800,236 (April 2017 cohort) |
 | Validation users | 79,942 (May 2017 cohort) |
 | Total revenue at risk | **7.9 Billion TWD** |
 
-![MLflow Experiments](docs/mlflow_experiments.png)
+## [MLflow Experiments](docs/mlflow_experiments.png)
+
 ---
 
 ## 📊 Dataset

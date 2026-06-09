@@ -26,7 +26,7 @@ with m1:
     st.metric("Total Users", f"{len(master):,}")
 with m2:
     total_risk = master['expected_loss'].sum()
-    st.metric("Total Revenue at Risk", f"{total_risk/1e9:.2f}B TWD")
+    st.metric("Est. Revenue at Risk (CLV-weighted)", f"~{total_risk/1e9:.2f}B TWD")
 with m3:
     high_risk = master[master['churn_prob'] > 0.5]
     st.metric("Critical Risk Users", f"{len(high_risk):,}")

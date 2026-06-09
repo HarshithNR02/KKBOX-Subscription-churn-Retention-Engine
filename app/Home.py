@@ -31,7 +31,7 @@ with col3:
 with col4:
     st.metric("Features Engineered", "101")
 with col5:
-    st.metric("Revenue at Risk", "7.9B TWD")
+    st.metric("Est. Revenue at Risk", "~7.9B TWD")
 
 st.divider()
 

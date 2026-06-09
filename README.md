@@ -27,7 +27,7 @@
 
 ---
 
-![Dashboard](docs/dashboard_home.png)
+![Dashboard](docs/dashboard.PNG)
 
 ---
 

@@ -27,7 +27,7 @@
 | Validation users | 79,942 (May 2017 cohort) |
 | Total revenue at risk | **7.9 Billion TWD** |
 
-![MLflow Experiments](docs/mlflow_experiments.png)
+![MLflow Experiments](docs/mlflow_experiments.PNG)
 ---
 
 ## 📊 Dataset

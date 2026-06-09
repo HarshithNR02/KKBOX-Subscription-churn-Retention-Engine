@@ -12,6 +12,8 @@ models/*.pkl
 # MLflow
 mlflow/
 
+informations/
+
 # CatBoost logs
 notebooks/catboost_info/
 

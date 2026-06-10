@@ -21,7 +21,7 @@
 |--------|-------|
 | **ROC-AUC** | **0.9481** (temporal hold-out, May 2017 cohort) |
 | Features engineered | **101** |
-| Training users | 800,236 (April 2017 cohort) |
+| Training users | 800,236 (pre-May 2017 cohort) |
 | Validation users | 79,942 (May 2017 cohort) |
 | Estimated revenue at risk (CLV-weighted) | **~100M TWD** |
 
@@ -48,13 +48,15 @@
 
 ## 🏗️ Project Architecture
 
+![Architecture](docs/architecture.png)
+
 ```
 Raw CSVs (30+ GB, 392M listening events)
     ↓ DuckDB out-of-core processing
 Parquet files (237 MB master dataset)
     ↓ Feature engineering (101 features, 3 tables)
 Master dataset (970,960 × 110)
-    ↓ Temporal split: April train → May validation
+    ↓ Temporal split: pre-May 2017 train → May 2017 validation
 LightGBM + Optuna (50 trials)
     ↓ AUC 0.9481
 SHAP + K-Means RFM + CLV
@@ -117,7 +119,7 @@ Streamlit dashboard (Azure Blob + Hugging Face Spaces)
 | **Mid_Value** | 397,304 | 6.2% | 1.83% | 52,479 TWD | Targeted discount |
 | **High_Engage** | 92,479 | 5.6% | 1.48% | 49,819 TWD | Premium upsell |
 
-> **Note:** Median churn probability and actual churn rate differ due to a known distribution shift between the April training cohort (1.65% churn) and May validation cohort (5.02% churn). The model ranks users correctly (AUC 0.9481) but absolute probability estimates reflect training distribution.
+> **Note:** Median churn probability and actual churn rate differ due to a known distribution shift between the pre-May 2017 training cohort (1.65% churn) and May 2017 validation cohort (5.02% churn). The model ranks users correctly (AUC 0.9481) but absolute probability estimates reflect training distribution.
 
 ---
 

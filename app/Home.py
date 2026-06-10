@@ -82,4 +82,4 @@ with col2:
 with col3:
     st.info("**Segmentation**\n\nK-Means RFM clustering. 5 segments: Lost, Mid_Value, High_Engage, Returning, Short_Cycle.")
 with col4:
-    st.info("**Business Impact**\n\n7.9B TWD estimated CLV-weighted revenue at risk. Retention priority matrix built per segment.")
+    st.info("**Business Impact**\n\n~100M TWD estimated CLV-weighted revenue at risk. Retention priority matrix built per segment.")

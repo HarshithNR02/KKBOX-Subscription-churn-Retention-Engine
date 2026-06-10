@@ -38,9 +38,9 @@
 | File | Size | Rows | Description |
 |------|------|------|-------------|
 | `train_v2.csv` | 45.6 MB | 970,960 | Labeled users, 8.99% churn rate |
-| `transactions.csv` | 1.73 GB | — | Payment and subscription records |
+| `transactions.csv` | 1.73 GB | 21547746 | Payment and subscription records |
 | `user_logs.csv` | 30.51 GB | 392,106,543 | Daily listening events |
-| `members_v3.csv` | 427.9 MB | — | User demographics |
+| `members_v3.csv` | 427.9 MB | 6769473 | User demographics |
 
 **Key engineering challenge:** 30.51 GB of raw CSV — 392M listening events — processed entirely out-of-core using DuckDB without loading into RAM. Compressed to Parquet with significant size reduction (master dataset: 237 MB).
 
@@ -66,7 +66,7 @@ Streamlit dashboard (Azure Blob + Hugging Face Spaces)
 
 ---
 
-## 📓 Notebooks
+## Notebooks
 
 | Notebook | Description |
 |----------|-------------|
@@ -95,7 +95,7 @@ Streamlit dashboard (Azure Blob + Hugging Face Spaces)
 
 ---
 
-## 🔑 Top 5 Features (SHAP)
+## Top 5 Features (SHAP)
 
 | Feature | Mean \|SHAP\| | Business Meaning |
 |---------|--------------|-----------------|
@@ -109,7 +109,7 @@ Streamlit dashboard (Azure Blob + Hugging Face Spaces)
 
 ---
 
-## 👥 Customer Segments (K-Means RFM)
+## Customer Segments (K-Means RFM)
 
 | Segment | Users | Actual Churn Rate | Median Churn Prob | Avg CLV | Action |
 |---------|-------|-------------------|-------------------|---------|--------|
@@ -123,18 +123,18 @@ Streamlit dashboard (Azure Blob + Hugging Face Spaces)
 
 ---
 
-## 💡 Dashboard Features
+## Dashboard Features
 
-1. **🏠 Home** — KPIs, segment overview, SHAP feature importance
-2. **🔮 Churn Prediction** — Look up any of 970K users by ID — instant risk score, CLV, recommended action
-3. **👥 Customer Segments** — Interactive segment analysis with revenue at risk breakdown
-4. **🧪 What-If Analysis** — Manually adjust features to explore how behavioral changes affect churn risk
-5. **🧠 SHAP Explainability** — Global importance + individual waterfall plots
-6. **💡 Retention Strategy** — Priority matrix, ROI calculator, GPT-4o AI recommendations
+1. **Home** — KPIs, segment overview, SHAP feature importance
+2. **Churn Prediction** — Look up any of 970K users by ID — instant risk score, CLV, recommended action
+3. **Customer Segments** — Interactive segment analysis with revenue at risk breakdown
+4. **What-If Analysis** — Manually adjust features to explore how behavioral changes affect churn risk
+5. **SHAP Explainability** — Global importance + individual waterfall plots
+6. **Retention Strategy** — Priority matrix, ROI calculator, GPT-4o AI recommendations
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Category | Tools |
 |----------|-------|
@@ -148,7 +148,7 @@ Streamlit dashboard (Azure Blob + Hugging Face Spaces)
 
 ---
 
-## 📈 Key EDA Findings
+## Key EDA Findings
 
 - **Auto-renew OFF → 42.7% churn** vs ON → 4.5% churn (9.4x difference, strongest transaction signal)
 - **Listening drop-off signal** — churn rises from 6.4% (0-3 days silent) to 34.3% (15-30 days silent)
@@ -158,7 +158,7 @@ Streamlit dashboard (Azure Blob + Hugging Face Spaces)
 
 ---
 
-## 🚀 Running Locally
+## Running Locally
 
 ```bash
 git clone https://github.com/HarshithNR02/KKBOX_CHURN_PREDICTION.git
@@ -176,7 +176,7 @@ streamlit run Home.py
 
 ---
 
-## 👤 Author
+## Author
 
 **Harshith Nerlikere Ramesh**  
 MS Data Science, UMass Dartmouth (2026)  

@@ -3,7 +3,7 @@
 > End-to-end customer churn prediction for Asia's leading music streaming service — from 30GB raw logs to a deployed AI-powered retention dashboard.
 
 [![Live Demo](https://img.shields.io/badge/🤗%20HuggingFace-Live%20Demo-yellow)](https://huggingface.co/spaces/harshith02/kkbox-churn-intelligence)
-[![GitHub](https://img.shields.io/badge/GitHub-KKBOX_CHURN_PREDICTION-blue)][(https://github.com/HarshithNR02/KKBOX-Subscription-churn-Retention-Engine)]
+[![GitHub](https://img.shields.io/badge/GitHub-KKBOX_Churn_Retention-blue)](https://github.com/HarshithNR02/KKBOX-Subscription-churn-Retention-Engine)
 [![Python](https://img.shields.io/badge/Python-3.11-blue)](https://python.org)
 [![LightGBM](https://img.shields.io/badge/LightGBM-AUC%200.9481-green)](https://lightgbm.readthedocs.io)
 

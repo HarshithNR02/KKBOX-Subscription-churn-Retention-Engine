@@ -108,8 +108,8 @@ with col3:
 
 with col4:
     st.subheader("⚠️ Revenue at Risk by Segment")
-    master['expected_loss'] = master['clv'] * master['churn_prob']
-    risk_by_seg = master.groupby('segment')['expected_loss'].sum().sort_values(ascending=False)
+    expected_loss = master['clv'] * master['churn_prob']
+    risk_by_seg = expected_loss.groupby(master['segment']).sum().sort_values(ascending=False)
     colors = [COLORS.get(s, '#95a5a6') for s in risk_by_seg.index]
     fig, ax = plt.subplots(figsize=(6, 4))
     bars = ax.bar(risk_by_seg.index, risk_by_seg.values / 1e6, color=colors, alpha=0.85)

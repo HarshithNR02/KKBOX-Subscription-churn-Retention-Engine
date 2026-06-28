@@ -9,12 +9,14 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 from utils import load_master, load_shap_values, load_model
 
+IS_HF = Path("/tmp/models").exists()
+MODEL_DIR = Path("/tmp/models") if IS_HF else Path.home() / "kkbox-churn" / "models"
+
 st.set_page_config(page_title="SHAP Explainability", layout="wide")
 st.title("Model Explainability")
 st.markdown("SHAP (SHapley Additive exPlanations) — understanding why the model predicts churn.")
 st.divider()
 
-MODEL_DIR = Path.home() / "kkbox-churn" / "models"
 
 # --- Global Feature Importance ---
 st.subheader("🌍 Global Feature Importance")

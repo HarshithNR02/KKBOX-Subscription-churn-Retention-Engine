@@ -88,7 +88,7 @@ if st.button("Predict Churn", type="primary", use_container_width=True):
         input_df[col] = input_df[col].astype('category')
 
     raw_prob = model.predict_proba(input_df[FEATURE_COLS])[:, 1][0]
-    cal_prob = raw_prob
+    cal_prob = float(iso_reg.predict([raw_prob])[0])
     risk_label, _ = get_risk_tier(cal_prob)
 
     if cal_prob > 0.5:
